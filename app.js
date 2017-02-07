@@ -5,7 +5,8 @@ var main = function(){
 		url:"http://localhost:1237",
 		method:"Get"		
 		}).success(function(jsonresponse){
-				var content=""
+				var content="";
+				content  ="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>"
 				jsonresponse.forEach(function(element){
 					content = content + "<tr>";
 					content = content + "<td>";
@@ -15,7 +16,10 @@ var main = function(){
 					content = content + element.location;
 					content = content + "</td>";
 					content = content + "<td>";
-					content = content + element.TargetDate;
+					content = content + element.notes;
+					content = content + "</td>";
+					content = content + "<td>";
+					content = content + element.targetdate;
 					content = content + "</td>";
 					content = content + "<td>";
 					content = content + element.status;
