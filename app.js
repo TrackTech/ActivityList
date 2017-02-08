@@ -5,8 +5,7 @@ var main = function(){
 		url:"http://localhost:1237",
 		method:"Get"		
 		}).success(function(jsonresponse){
-				var content="";
-				content  ="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>"
+				var content="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>";
 				jsonresponse.forEach(function(element){
 					content = content + "<tr>";
 					content = content + "<td>";
@@ -25,8 +24,9 @@ var main = function(){
 					content = content + element.status;
 					content = content + "</td>";
 					content = content + "</tr>";
-				});				
-					$('#tblActivitylist').html(content);
+				});		
+	
+					$('#tblActivitylist').append(content);
 		});
 };
 
