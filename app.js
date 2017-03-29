@@ -2,7 +2,8 @@ var main = function(){
 	"use strict";
 	//window.alert("hello world");
 	$.ajax({
-		url:"http://localhost:1237",
+		//url:"http://localhost:1237",
+		url:"/data/activitylist",
 		method:"Get"		
 		}).success(function(jsonresponse){
 				var content="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>";
