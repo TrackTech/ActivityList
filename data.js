@@ -1,0 +1,20 @@
+var dataModule=dataModule||{};
+dataModule=(function(){
+		return{
+			Get:function(uri,successCallback){
+				$.ajax({					
+					url:uri,
+					method:"Get"		
+					}).success(successCallback);	
+			},
+			Post:function(uri,data,successCallback){
+				$.ajax({					
+					url:uri,
+					method:"Post",
+					contentType:"application/json",					
+					data:data,		
+					}).success(successCallback);	
+			}
+		};
+	}
+	)();
