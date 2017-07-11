@@ -85,9 +85,9 @@ function handleRequest(request,response){
 			console.log('POST an activity');			
 			MongoClient.connect(url,function(err,db){
 										
-					response.writeHead(200,{'Content-Type':'application/json'});					
+					response.writeHead(200); //cannot simply include content type.			
 					insertDocument(db,postData,function(data){
-					console.log('call back has been executed, activity posted');
+					console.log('call back has been executed, activity posted');					
 					//response.redirect('/');
 					response.end();
 					db.close();					

@@ -33,7 +33,7 @@ var mainModule = (function(){
 
 					},
 					postActivity:function(postData){
-						dataModule.Post('/data/activity',postData,mainModule.printActivityList);
+						dataModule.Post('/data/activity',postData,mainModule.getActivityList);
 						//dataModule.Post('/data/activity',"hello world",mainModule.printActivityList);
 					}
 				};

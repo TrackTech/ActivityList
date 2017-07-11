@@ -12,8 +12,18 @@ dataModule=(function(){
 					url:uri,
 					method:"Post",
 					contentType:"application/json",					
-					data:data,		
-					}).success(successCallback);	
+					data:data,
+					complete:function(){							
+					},
+					success:function(data){						
+						successCallback();
+					},
+					error:function(xhr,ajaxOptions,throwError){
+						alert(xhr.status);
+						alert(throwError);
+					}
+					});		
+					//}).success(successCallback);	
 			}
 		};
 	}

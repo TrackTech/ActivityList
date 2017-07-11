@@ -16,11 +16,13 @@ header,main,footer{
 .tableLayout{
 	width: 100%;
 }
+.tableLayout tr>th{
+	border:solid;
+}
 .tableLayout td{
 	text-align: center;
 		width: 15%;
 }
-
 .tableLayout td:nth-of-type(3){
 		width: 40%;
 }
