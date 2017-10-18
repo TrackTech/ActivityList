@@ -4,8 +4,9 @@ dataModule=(function(){
 			Get:function(uri,successCallback){
 				$.ajax({					
 					url:uri,
-					method:"Get"		
-					}).success(successCallback);	
+					method:"Get",
+					success:successCallback		
+					});	
 			},
 			Post:function(uri,data,successCallback){
 				$.ajax({					
@@ -14,16 +15,12 @@ dataModule=(function(){
 					contentType:"application/json",					
 					data:data,
 					complete:function(){							
-					},
-					success:function(data){						
-						successCallback();
-					},
+					},					
 					error:function(xhr,ajaxOptions,throwError){
 						alert(xhr.status);
 						alert(throwError);
 					}
-					});		
-					//}).success(successCallback);	
+					}).success(successCallback); //two syntax to call success						
 			}
 		};
 	}

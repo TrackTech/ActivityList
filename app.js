@@ -5,10 +5,20 @@ var dataModule = dataModule || {};
 var mainModule = (function(){
 				return{
 					getActivityList:function(){
-						var jsonresponse = dataModule.Get('/data/activitylist',mainModule.printActivityList);						
+						dataModule.Get('/data/activitylist',[mainModule.printActivityListHeader,mainModule.printActivityList]);						
+					},
+					getActivityWithRedraw:function(){
+						dataModule.Get('/data/activitylist',[mainModule.clearActivityList,mainModule.printActivityListHeader,mainModule.printActivityList]);
+					},
+					clearActivityList:function(){
+						$('#tblActivitylist tr').remove(); //here tr is decendent and not child for child use $('#tblActivitylist >tr')
+					},
+					printActivityListHeader:function(){
+						var content="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>";						
+						$('#tblActivitylist').append(content);
 					},
 					printActivityList:function(jsonresponse){
-						var content="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>";
+						var content="";
 						jsonresponse.forEach(function(element){
 							content = content + "<tr>";
 							content = content + "<td>";
@@ -33,13 +43,13 @@ var mainModule = (function(){
 
 					},
 					postActivity:function(postData){
-						dataModule.Post('/data/activity',postData,mainModule.getActivityList);
+						dataModule.Post('/data/activity',postData,mainModule.getActivityWithRedraw);
 						//dataModule.Post('/data/activity',"hello world",mainModule.printActivityList);
 					}
 				};
 		}
 	)();
-//$(document).ready(mainModule.getActivityList);
+
 $(document).ready(function(){
 				mainModule.getActivityList();
 				$('#btnAddActiivty').click(function(){
