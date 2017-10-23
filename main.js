@@ -2,7 +2,7 @@ var http = require('http');
 var HttpDispatcher = require('httpdispatcher');
 var MongoClient = require('mongodb').MongoClient;
 var StringDecoder = require('string_decoder').StringDecoder;
-
+var dal = require('./dal'); //.js not required here
 var allowedDomain = 'http://my.activity.com'; 
 
 function handleRequest(request,response){
@@ -20,14 +20,14 @@ function handleRequest(request,response){
 		MongoClient.connect(url,function(err,db){
 				console.log('fetching list of activity');
 				if(err){
-						//response.setHeader('Retry-After',5);
+						//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot
 						response.writeHead(503);						
 						response.end();	
 						return;
 					}
 				responseCode='200';
 				response.writeHead(200,{'Content-Type':'application/json'});
-				findDocuments(db,function(data){
+				dal.findDocuments(db,function(data){
 					console.log('call back has been executed, list sent');
 					response.write(data);
 					db.close();
@@ -47,7 +47,7 @@ function handleRequest(request,response){
 						return;	
 					}
 					response.writeHead(200); //cannot simply include content type.			
-					insertDocument(db,postData,function(data){
+					dal.insertDocument(db,postData,function(data){
 					console.log('call back has been executed, activity posted');					
 					response.end();
 					db.close();					
@@ -64,26 +64,5 @@ else{
 
 http.createServer(handleRequest).listen(1237,'127.0.0.1');
 
-var findDocuments = function(db,cback){
-	var collection = db.collection('T_ACTIVITY_LIST');	
-	collection.find({}).toArray(function(err,docs){		
-		cback(JSON.stringify(docs));
-		});
-} 
-
-var insertDocument = function(db,postData,cback){
-	var collection = db.collection('T_ACTIVITY_LIST');	
-	var jsonData;
-	var dataToUpload={};
-	
-	jsonData = JSON.parse(postData);
-
-	jsonData.forEach(function(element){
-		dataToUpload[element.name] = element.value;
-		//console.log(element);
-	});
-	collection.insert(dataToUpload);
-	cback(true);
-}
 
 console.log('server is running with MongoClient');
