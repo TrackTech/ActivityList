@@ -1,13 +1,21 @@
-//var MongoClient = require('mongodb').MongoClient;
+//should make a connection to MongoDB
+//should return an object with result
+//the result object has either data or err
 console.log('DAL has been loaded');
-exports.findDocuments = function(db,cback){
-	var collection = db.collection('T_ACTIVITY_LIST');	
-	collection.find({}).toArray(function(err,docs){		
-		cback(JSON.stringify(docs));
-		});
-} 
 
-exports.insertDocument = function(db,postData,cback){
+var MongoClient = require('mongodb').MongoClient;
+
+var findAllDocuments = function(db,cback){
+	var collection = db.collection('T_ACTIVITY_LIST');	
+	collection.find({}).toArray(function(err,docs){	
+		db.close();	
+		var retVal = {};
+		retVal.data = JSON.stringify(docs);
+		retVal.responseCode = '200';
+		cback(retVal);
+		})};
+
+var insertDocument = function(db,postData,cback){
 	var collection = db.collection('T_ACTIVITY_LIST');	
 	var jsonData;
 	var dataToUpload={};
@@ -19,5 +27,41 @@ exports.insertDocument = function(db,postData,cback){
 		//console.log(element);
 	});
 	collection.insert(dataToUpload);
-	cback(true);
+	db.close();
+	var retVal={};
+	retVal.responseCode = '200';
+	cback(retVal);
+}
+
+exports.findDocs = function(url,cback){
+	
+	MongoClient.connect(url,function(err,db){
+		
+				console.log('fetching list of activity');
+				
+				if(err){
+					var retVal={};
+						retVal.responseCode = '503';
+						retVal.error = err;							
+						cback(retVal);
+					}
+				else{												
+				findAllDocuments(db,cback);	
+				}							
+		});		
+}
+
+exports.insertDoc = function(url,postData,cback){
+	MongoClient.connect(url,function(err,db){
+		console.log('inserting activity');				
+				if(err){
+					var retVal = {};
+						retVal.responseCode = '503';
+						retVal.error = err;							
+						cback(retVal);
+					}
+					else{
+						insertDocument(db,postData,cback);
+					}
+	});
 }
