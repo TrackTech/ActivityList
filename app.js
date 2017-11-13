@@ -7,14 +7,15 @@ var mainModule = (function(){
 					getActivityList:function(){
 						dataModule.Get('/data/activitylist',[mainModule.printActivityListHeader,mainModule.printActivityList]);						
 					},
-					getActivityWithRedraw:function(){
-						dataModule.Get('/data/activitylist',[mainModule.clearActivityList,mainModule.printActivityListHeader,mainModule.printActivityList]);
+					getActivityWithRedraw:function(){						
+						dataModule.Get('/data/activitylist',[mainModule.clearActivityList,mainModule.printActivityList]);
 					},
 					clearActivityList:function(){
-						$('#tblActivitylist tr').remove(); //here tr is decendent and not child for child use $('#tblActivitylist >tr')
+
+						$('#tblActivitylist tbody').remove(); //space tr is decendent and not child for child use $('#tblActivitylist >tr')
 					},
 					printActivityListHeader:function(){
-						var content="<tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr>";						
+						var content="<thead><tr><th>Activity</th><th>Location</th><th>Notes</th><th>Target Date</th><th>Status</th></tr></thead>";						
 						$('#tblActivitylist').append(content);
 					},
 					printActivityList:function(jsonresponse){
@@ -43,8 +44,7 @@ var mainModule = (function(){
 
 					},
 					postActivity:function(postData){
-						dataModule.Post('/data/activity',postData,mainModule.getActivityWithRedraw);
-						//dataModule.Post('/data/activity',"hello world",mainModule.printActivityList);
+						dataModule.Post('/data/activity',postData,mainModule.getActivityWithRedraw);						
 					}
 				};
 		}
