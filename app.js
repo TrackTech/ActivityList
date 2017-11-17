@@ -45,16 +45,30 @@ var mainModule = (function(){
 					},
 					postActivity:function(postData){
 						dataModule.Post('/data/activity',postData,mainModule.getActivityWithRedraw);						
+					},
+					fetchLookupData:function(){
+						var selectList = $('#formPanel select[data-lookuptoken]');						
+						selectList.each(function(index){
+							var token = $(this).data('lookuptoken');
+							var lookupResource= '/lookup/'+token;
+							var that = this;						
+							dataModule.Get(lookupResource,function(data){
+								var aryData = data[0][token];													
+								$.each(aryData,function(index,value){																	
+									$(that).append($("<option></option>").attr("id",value.key).text(value.value));									
+								});								
+							});
+						});
 					}
 				};
 		}
 	)();
 
 $(document).ready(function(){
+				mainModule.fetchLookupData();
 				mainModule.getActivityList();
 				$('#btnAddActiivty').click(function(){
-					var frm = JSON.stringify($('#frmActivity').serializeArray());
-					//alert(frm);
+					var frm = JSON.stringify($('#frmActivity').serializeArray());					
 					mainModule.postActivity(frm);
 				});
 
