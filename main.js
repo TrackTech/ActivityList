@@ -58,8 +58,8 @@ function handleRequest(request,response){
 			response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot					
 			response.end();
 		}
-		else{				
-			response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});
+		else{						
+			response.writeHead(retVal.responseCode,{'Content-Type':'application/json','Cache-Control':'public,max-age=300'});			
 			response.write(retVal.data);			
 			response.end();
 			}
