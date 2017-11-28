@@ -67,10 +67,14 @@ var mainModule = (function(){
 $(document).ready(function(){
 				mainModule.fetchLookupData();
 				mainModule.getActivityList();
-				$('#btnAddActiivty').click(function(){
+				$('#btnAddActivity').click(function(){
 					var frm = JSON.stringify($('#frmActivity').serializeArray());					
 					mainModule.postActivity(frm);
 				});
-
+				$('#btnShowDialog').click(function(){
+					$('#mainContainer').addClass('inactive');							
+					$('#newActivityPanel').removeClass('hidden').addClass('activeCentered');
+					$('#newActivityPanel').width($('#mainContainer').width() -50);
+				});
 			}
 	);
