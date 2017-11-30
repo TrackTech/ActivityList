@@ -12,13 +12,13 @@
 		<main>
 		<div id='activityList'>	
 		<input type='button' id='btnShowDialog' value='Add New Activity'/>
-		<table id="tblActivitylist" class="tableLayout">		
+		<table id="tblActivitylist" class="tableLayout voverflow">		
 		</table>
 		</div>
 
 		<div id="newActivityPanel" class='hidden'>
 		<div id="headerPanel">		
-		<span>Activity</span><span>Location</span><span>Target Date</span><span>Status</span>
+		<span>Add the activities you have done or plan to do</span>
 		</div>
 		
 		<span id="btnClose" class="close">X</span>
@@ -40,7 +40,10 @@
 				<span>Hello World</span>
 			</div>
 			<div class="fullrow">
-				<label for="txtLocation">Location:</label><input type="text" id="txtActivity" name='location'/>
+				<label for="txtLocation">Location:</label><input type="text" id="txtLocation" name='location'/>
+			</div>
+			<div class="fullrow">
+				<label for="txtNotes">Notes:</label><input type="text" id="txtNotes" name='notes'/>
 			</div>
 				<input type='button' id='btnAddActivity' value='Add New Activity'/>
 			</form>

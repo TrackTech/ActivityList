@@ -63,18 +63,44 @@ var mainModule = (function(){
 				};
 		}
 	)();
-
+var handlerModule = (function(){
+	var currentUiState='open';
+	var getUiState=function(){
+		return currentUiState;
+	}
+	var setUiState=function(state){
+			currentUiState = state;
+		}
+	return {			
+		addActivityHandler:function(){
+			var frm = JSON.stringify($('#frmActivity').serializeArray());					
+				mainModule.postActivity(frm);
+		},
+		showDialogHandler:function(){
+			if(getUiState()!='open'){
+				return;
+			}			
+			$('#mainContainer').addClass('inactive');
+			$('#tblActivitylist').removeClass('voverflow')							;
+			$('#tblActivitylist').addClass('novoverflow')							;			
+			$('#newActivityPanel').removeClass('hidden').addClass('activeCentered');
+			$('#newActivityPanel').width($('#mainContainer').width() -50);		
+			setUiState('close');	
+		},
+		closeDialogHandler:function(){
+			$('#mainContainer').removeClass('inactive');	
+			$('#tblActivitylist').addClass('voverflow')							;
+			$('#tblActivitylist').removeClass('novoverflow')							;									
+			$('#newActivityPanel').addClass('hidden').removeClass('activeCentered');
+			setUiState('open');			
+		}
+	}
+})();
 $(document).ready(function(){
 				mainModule.fetchLookupData();
 				mainModule.getActivityList();
-				$('#btnAddActivity').click(function(){
-					var frm = JSON.stringify($('#frmActivity').serializeArray());					
-					mainModule.postActivity(frm);
-				});
-				$('#btnShowDialog').click(function(){
-					$('#mainContainer').addClass('inactive');							
-					$('#newActivityPanel').removeClass('hidden').addClass('activeCentered');
-					$('#newActivityPanel').width($('#mainContainer').width() -50);
-				});
+				$('#btnAddActivity').click(handlerModule.addActivityHandler);
+				$('#btnShowDialog').click(handlerModule.showDialogHandler);
+				$('.close').click(handlerModule.closeDialogHandler);				
 			}
 	);
