@@ -1,0 +1,53 @@
+*{
+	margin: 0;
+} /* universal selector to remove top margin */
+html,body {	
+/*	height: 100%;
+	margin-top: 0; */
+}
+.container
+{
+	max-width: 1080px;
+	background-color: rgb(230,239,255);		
+	margin:auto;	
+	height: 100vh;			
+}
+.container header{
+	height: 10vh;
+}
+.container footer{
+	height: 10vh;
+}
+.loginPanel{
+	position: absolute;
+	width: 600px;
+	margin-left: 50px;
+	top:50%;
+	background-color: rgb(255,255,255);
+	padding: 10px;
+}
+.splitrow{
+	width: 70%;	
+	float: left;
+}
+.splitrow label{
+	width: 30%;
+	display: inline-block;
+}
+/*
+.activeCentered
+{
+	margin-left:20px;
+	margin-right:20px;
+	top: 50%;
+	position: absolute;	
+	background-color: rgb(255,255,255);
+	display: block;
+}
+.inputPanel{
+	width: 100%;
+	margin: auto;
+	clear: both;
+}
+
+*/

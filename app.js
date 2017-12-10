@@ -41,7 +41,6 @@ var mainModule = (function(){
 						});		
 	
 					$('#tblActivitylist').append(content);
-
 					},
 					postActivity:function(postData){
 						dataModule.Post('/data/activity',postData,mainModule.getActivityWithRedraw);						
@@ -63,7 +62,26 @@ var mainModule = (function(){
 				};
 		}
 	)();
-var handlerModule = (function(){
+var pubSub = (function(){
+	var eventList={};
+	return {
+		raiseCustomEvent:function(eventName){ //support passing of parameters [].slice.call(arguments,1);					
+			if(!eventList[eventName]) return;
+			for (var i = 0; i<eventList[eventName].length; i++) {
+				eventList[eventName][i]();
+			}						
+		},
+		subscribeCustomEvent:function(eventName,callback){		
+			if(!eventList[eventName]){
+				eventList[eventName]=[];				
+			}	
+			if(!eventList[eventName].includes(eventName)){
+				eventList[eventName].push(callback);
+			}
+		}
+	}
+})();
+var handlerModule = (function(psub){
 	var currentUiState='open';
 	var getUiState=function(){
 		return currentUiState;
@@ -71,12 +89,11 @@ var handlerModule = (function(){
 	var setUiState=function(state){
 			currentUiState = state;
 		}
-	return {			
-		addActivityHandler:function(){
+	var addActivityHandler=function(){
 			var frm = JSON.stringify($('#frmActivity').serializeArray());					
 				mainModule.postActivity(frm);
-		},
-		showDialogHandler:function(){
+		}
+	var showDialogHandler=function(){	
 			if(getUiState()!='open'){
 				return;
 			}			
@@ -86,21 +103,37 @@ var handlerModule = (function(){
 			$('#newActivityPanel').removeClass('hidden').addClass('activeCentered');
 			$('#newActivityPanel').width($('#mainContainer').width() -50);		
 			setUiState('close');	
-		},
-		closeDialogHandler:function(){
+		}
+	var closeDialogHandler=function(){
 			$('#mainContainer').removeClass('inactive');	
 			$('#tblActivitylist').addClass('voverflow')							;
 			$('#tblActivitylist').removeClass('novoverflow')							;									
 			$('#newActivityPanel').addClass('hidden').removeClass('activeCentered');
 			setUiState('open');			
 		}
+	psub.subscribeCustomEvent('show-dialog',showDialogHandler);
+	psub.subscribeCustomEvent('add-activity',addActivityHandler);
+	psub.subscribeCustomEvent('close-dialog',closeDialogHandler);
+
+})(pubSub); //refactor - what if pubSub moves to different file
+var eventList=(function(psub){
+	return{
+		showDialog:function(){
+			psub.raiseCustomEvent('show-dialog');
+		},
+		closeDialog:function(){
+			psub.raiseCustomEvent('close-dialog');			
+		},
+		addActivity:function(){
+			psub.raiseCustomEvent('add-activity');
+		}
 	}
-})();
-$(document).ready(function(){
+})(pubSub);
+$(document).ready(function(){				
 				mainModule.fetchLookupData();
 				mainModule.getActivityList();
-				$('#btnAddActivity').click(handlerModule.addActivityHandler);
-				$('#btnShowDialog').click(handlerModule.showDialogHandler);
-				$('.close').click(handlerModule.closeDialogHandler);				
+				$('#btnAddActivity').click(eventList.addActivity);
+				$('#btnShowDialog').click(eventList.showDialog);				
+				$('.close').click(eventList.closeDialog);		
 			}
 	);

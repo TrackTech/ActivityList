@@ -5,24 +5,13 @@ console.log('DAL has been loaded');
 
 var MongoClient = require('mongodb').MongoClient;
 
-var findAllDocuments = function(db,cback,collectionName,findQuery){
-	//var collection = db.collection('T_ACTIVITY_LIST');	
+var findAllDocuments = function(db,cback,collectionName,findQuery,limit){	
 	var collection = db.collection(collectionName);
-	if(findQuery===undefined){
+	findQuery = findQuery || {};
+	/*if(findQuery===undefined){
 		findQuery={};
-	}	
+	} */	
 	collection.find(findQuery).toArray(function(err,docs){	
-		db.close();	
-		var retVal = {};
-		retVal.data = JSON.stringify(docs);
-		retVal.responseCode = '200';
-		cback(retVal);
-		})};
-
-
-var findAllDocuments2 = function(db,cback){
-	var collection = db.collection('T_LOOKUP');	
-	collection.find({'activitystatus':{$exists:true}}).toArray(function(err,docs){	
 		db.close();	
 		var retVal = {};
 		retVal.data = JSON.stringify(docs);
@@ -80,22 +69,4 @@ exports.insertDoc = function(url,postData,cback){
 						insertDocument(db,postData,cback);
 					}
 	});
-}
-
-exports.findDocs2 = function(url,cback){
-	
-	MongoClient.connect(url,function(err,db){
-		
-				console.log('fetching lookup data');
-				
-				if(err){
-					var retVal={};
-						retVal.responseCode = '503';
-						retVal.error = err;							
-						cback(retVal);
-					}
-				else{												
-				findAllDocuments2(db,cback);	
-				}							
-		});		
 }

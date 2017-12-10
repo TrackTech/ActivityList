@@ -66,6 +66,11 @@ function handleRequest(request,response){
 		},'T_LOOKUP',searchQuery);
 		
 	}
+	if(request.url.startsWith('/auth')){
+		requestServed=true;
+		response.writeHead(302,{'Location':'index.html'}); //validate and send 302 
+		response.end();
+	}
 	if(!requestServed)
 	{
 
