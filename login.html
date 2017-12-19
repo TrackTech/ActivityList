@@ -10,15 +10,12 @@
 		</header>
 		<main>
 			<div id="formPanel" class="loginPanel">		
-				<form id='frmActivity' method='post' action="/auth">	
-					<div class="splitrow">
-					<div>	
-					<label for="txtLogin">Login:</label><input type=text id=txtLogin name="login"></input>
-					</div>			
-					<div>
-					<label for="txtPass">Password:</label><input id="txtPass" type="Password" name="pass"/>
-					</div>
-					<input type="submit" name="btnSubmit" value="Enter">					
+				<form id='frmActivity' method='post' action="/auth/token">	
+					<div class="inputdiv">					
+					<input type=text id=txtLogin name="login"></input><label for="txtLogin">Login:</label>				
+					<input id="txtPass" type="Password" name="password"/><label for="txtPass">Password:</label>
+					<input type="submit" name="btnSubmit" value="Enter">	
+					<a href="" class="registerlink">Register</a>				
 					</div>					
 				</form>
 			</div>

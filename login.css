@@ -26,28 +26,21 @@ html,body {
 	background-color: rgb(255,255,255);
 	padding: 10px;
 }
-.splitrow{
+.inputdiv{
 	width: 70%;	
 	float: left;
 }
-.splitrow label{
+.inputdiv label{
 	width: 30%;
 	display: inline-block;
+	float: right;	
 }
-/*
-.activeCentered
-{
-	margin-left:20px;
-	margin-right:20px;
-	top: 50%;
-	position: absolute;	
-	background-color: rgb(255,255,255);
-	display: block;
+.inputdiv input{
+	clear:both;
+	float: right;
 }
-.inputPanel{
-	width: 100%;
-	margin: auto;
+.registerlink{
 	clear: both;
+	float: right;
+	margin-right: 25%;
 }
-
-*/

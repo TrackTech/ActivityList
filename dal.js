@@ -14,20 +14,17 @@ var findAllDocuments = function(db,cback,collectionName,findQuery,limit){
 	collection.find(findQuery).toArray(function(err,docs){	
 		db.close();	
 		var retVal = {};
-		retVal.data = JSON.stringify(docs);
+		retVal.data = docs;
 		retVal.responseCode = '200';
 		cback(retVal);
 		})};
 
 
-var insertDocument = function(db,postData,cback){
-	var collection = db.collection('T_ACTIVITY_LIST');	
+var insertDocument = function(db,collectionName,postData,cback){
+	var collection = db.collection(collectionName);	
 	var jsonData;
-	var dataToUpload={};
-	
-	jsonData = JSON.parse(postData);
-
-	jsonData.forEach(function(element){
+	var dataToUpload={};	
+	postData.forEach(function(element){
 		dataToUpload[element.name] = element.value;
 		//console.log(element);
 	});
@@ -56,7 +53,7 @@ exports.findDocs = function(url,cback,collectionName,findQuery){
 		});		
 }
 
-exports.insertDoc = function(url,postData,cback){
+exports.insertDoc = function(url,collectionName,postData,cback){
 	MongoClient.connect(url,function(err,db){
 		console.log('inserting activity');				
 				if(err){
@@ -66,7 +63,7 @@ exports.insertDoc = function(url,postData,cback){
 						cback(retVal);
 					}
 					else{
-						insertDocument(db,postData,cback);
+						insertDocument(db,collectionName,postData,cback);
 					}
 	});
 }
