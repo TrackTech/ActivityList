@@ -1,25 +1,118 @@
+*{
+	margin: 0;
+} /* universal selector to remove top margin */
 html,body {	
-	height: 100%;
+/*	height: 100%;
+	margin-top: 0; */
 }
-header,main,footer{
+.inactive{
+	background-color: rgba(0,0,0,0.4) !important;		
+}
+.hidden{
+	display: none;
+}
+.novoverflow tbody{
+	overflow-y: hidden;
+}
+/* Input form related */
+.close{
+	float: right;
+	margin-right: 20px;
+	clear: both;
+	padding: 10px;
+	background-color: beige;
+	color: black;
+}
+.close:hover{
+	color:red;	
+	cursor: pointer;
+}
+.activeCentered
+{
+	margin-left:20px;
+	margin-right:20px;
+	top: 50%;
+	position: absolute;	
+	background-color: rgb(255,255,255);
+	display: block;
+}
+.inputPanel{
+	width: 100%;
+	margin: auto;
+	clear: both;
+}
+.splitrow{
+	width: 70%;	
+	float: left;
+}
+.splitrow label{
+	width: 30%;
+	display: inline-block;
+}
+.fullrow{
 	width: 90%;
+	clear:both;	
 }
+.fullrow label{
+	width: 23.5%;
+	display: inline-block;	
+}
+.sidecol{
+	float: right;
+}
+/* End Input form */
 .container
 {
 	max-width: 1080px;
 	background-color: rgb(230,239,255);		
-	margin:auto;
-	overflow-y: auto;
-	height: 100%
+	margin:auto;	
+	height: 100vh;	 	
 }
-.tableLayout{
+.container header{
+	height: 10vh;
+}
+.container footer{
+	height: 10vh;
+}
+.tableLayout{		
 	width: 100%;
+	height: 30vh;		
+}
+.tableLayout tr{		
+	display: table;
+	width: 100%;	
+}
+
+.tableLayout tr>th{
+	border:solid;
 }
 .tableLayout td{
 	text-align: center;
 		width: 15%;
 }
-
+.tableLayout tr>th{
+	text-align: center;
+		width: 15%;
+}
 .tableLayout td:nth-of-type(3){
 		width: 40%;
+}
+.tableLayout tr>th:nth-of-type(3){
+		width: 40%;
+}
+.tableLayout thead{
+	clear: both;
+	display: block;	
+}
+.tableLayout tbody{		
+	display: block;
+	max-height: 70vh; /*need to get scroll bar */ 
+	/*min-height: 30vh;	 */
+}
+.voverflow tbody{
+	overflow-y: auto;
+}
+#btnShowDialog{	
+	display: block;
+	float: right;
 }

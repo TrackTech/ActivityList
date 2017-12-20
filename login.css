@@ -1,0 +1,46 @@
+*{
+	margin: 0;
+} /* universal selector to remove top margin */
+html,body {	
+/*	height: 100%;
+	margin-top: 0; */
+}
+.container
+{
+	max-width: 1080px;
+	background-color: rgb(230,239,255);		
+	margin:auto;	
+	height: 100vh;			
+}
+.container header{
+	height: 10vh;
+}
+.container footer{
+	height: 10vh;
+}
+.loginPanel{
+	position: absolute;
+	width: 600px;
+	margin-left: 50px;
+	top:50%;
+	background-color: rgb(255,255,255);
+	padding: 10px;
+}
+.inputdiv{
+	width: 70%;	
+	float: left;
+}
+.inputdiv label{
+	width: 30%;
+	display: inline-block;
+	float: right;	
+}
+.inputdiv input{
+	clear:both;
+	float: right;
+}
+.registerlink{
+	clear: both;
+	float: right;
+	margin-right: 25%;
+}

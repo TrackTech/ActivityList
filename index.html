@@ -1,47 +1,62 @@
 <!doctype html>
 <head>
 <meta charset="utf-8">
-<title>A Simple App</title>
+<title>Off The Gym</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="container">	
+	<div id="mainContainer" class="container">	
 		<header>
 			<h1>Activity list project</h1>
 		</header>	
 		<main>
-		<div id='activityList'>		
-		<table id="tblActivitylist" class="tableLayout">		
+		<div id='activityList'>	
+		<input type='button' id='btnShowDialog' value='Add New Activity'/>
+		<table id="tblActivitylist" class="tableLayout voverflow">		
 		</table>
 		</div>
 
-		<div id="newActivityPanel">
-		<div id="headerPanel">
-		<span>Activity</span><span>Location</span><span>Target Date</span><span>Status</span>
+		<div id="newActivityPanel" class='hidden'>
+		<div id="headerPanel">		
+		<span>Add the activities you have done or plan to do</span>
 		</div>
-		<div id="formPanel">
-			<form>		
-				<select id="listActivity">
-					<option id='0'>Rock Climbing</option>
-					<option id='1'>Hiking</option>
-					<option id='2'>Half Marathon</option>			
-				</select>
-				<input type="text" id="txtActivity"/>
-				<input type="date"/>
-				<select id="listStatus">
-					<option id='0'>Pending</option>
-					<option id='1'>Done</option>
-					<option id='2'>MaybeNot</option>
-				</select>
-				<input type='submit'/>
+		
+		<span id="btnClose" class="close">X</span>
+		
+		<div id="formPanel" class="inputPanel">		
+			<form id='frmActivity'>	
+			<div class="splitrow">
+			<div>	
+				<label for="listActivity">Activity:</label><select id="listActivity" data-lookupToken='activitytype' name='activity'></select>
+			</div>			
+			<div>
+				<label for="dtTargetDate">Associated Date:</label><input id="dtTargetDate" type="date" name='targetdate'/>
+			</div>
+			<div>
+				<label for="listStatus">Status:</label><select id="listStatus" data-lookupToken='activitystatus' name='status'></select>
+			</div>
+			</div>
+			<div class="sidecol">
+				<span>Hello World</span>
+			</div>
+			<div class="fullrow">
+				<label for="txtLocation">Location:</label><input type="text" id="txtLocation" name='location'/>
+			</div>
+			<div class="fullrow">
+				<label for="txtNotes">Notes:</label><input type="text" id="txtNotes" name='notes'/>
+			</div>
+				<input type='button' id='btnAddActivity' value='Add New Activity'/>
+				<a href="" class="registerlink">Register</a>
 			</form>
 		</div>
 		</div>
 		</main>
 		<footer>
+		web->Nginx->Node->Mongodb
 		</footer>
 	</div>
 	<script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
 	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="data.js"></script>
 </body>
 </html>
