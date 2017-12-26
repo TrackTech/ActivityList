@@ -4,7 +4,7 @@ var dal = require('./dal'); //.js not required here
 var cryp = require('./crypto');
 var querystring = require('querystring');
 var allowedDomain = 'http://my.activity.com'; 
-var serversalt = 0x73616C74;
+var serversalt = 'salty';
 
 function handleRequest(request,response){		
 	var dburl = 'mongodb://localhost:27017/Activity';
@@ -65,20 +65,24 @@ function handleRequest(request,response){
 		}
 		if(request.url=='/auth/register'){ //only post
 			requestHandled=true;			
-			var queryObject = querystring.parse(postData);	
-			//need a validation class		
+			var queryObject = querystring.parse(postData);				
+/******************need a validation class		****************/
+			if(!queryObject["login"] || !queryObject["password"] || !queryObject["confirmpassword"]){
+				response.writeHead(400); //bad request, do not repeat
+				response.end();
+				return;
+			}			
 			if(queryObject.login=="" || queryObject.password=="" || queryObject.confirmpassword==""){
 				response.writeHead(400); //bad request, do not repeat
 				response.end();
 				return;
 			}
 
-
 			var hashOutput = cryp.generateHash(queryObject.password);			
-			hashOutput = cryp.generateHash(hashOutput,serversalt,1);	
+			var hashOutput2 = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);	
 			var cryptoToStore = [];		
 			cryptoToStore.push(KeyValPair("username",queryObject.login));
-			cryptoToStore.push(KeyValPair("passwordhash",hashOutput["passwordhash"]));
+			cryptoToStore.push(KeyValPair("passwordhash",hashOutput2["passwordhash"]));
 			cryptoToStore.push(KeyValPair("passwordsalt",hashOutput["passwordsalt"]));
 				
 			dal.insertDoc(dburl,'T_USERS',cryptoToStore,function(retVal){
@@ -98,14 +102,15 @@ function handleRequest(request,response){
 			var searchQuery = {};
 			searchQuery["username"]=queryObject.login;
 			var data = dal.findDocs(dburl,function(retVal){
+
 						if(retVal.error){
 							response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot													
 						}
-						else{
-								var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);
-								hashOutput = cryp.generateHash(hashOutput,serversalt,1);
-								response.writeHead(retVal.responseCode,{'Content-Type':'application/json','Cache-Control':'public,max-age=300'});
-								
+						else{		
+						/******************need a validation class		****************/												
+								var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);										
+								hashOutput = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);															
+								response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});								
 								if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ //not working
 									response.write("Login successed");
 								}									
