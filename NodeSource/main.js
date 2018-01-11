@@ -110,12 +110,13 @@ function handleRequest(request,response){
 						/******************need a validation class		****************/												
 								var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);										
 								hashOutput = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);															
-								response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});								
+								
 								if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ //not working
-									response.write("Login successed");
+									response.writeHead(303,{'Location':'../index.html'});									
 								}									
 								else
 								{
+									response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});								
 									response.write("failed");
 								}
 							}
