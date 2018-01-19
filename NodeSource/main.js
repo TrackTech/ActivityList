@@ -2,6 +2,7 @@ var http = require('http');
 var HttpDispatcher = require('httpdispatcher');
 var dal = require('./dal'); //.js not required here
 var cryp = require('./crypto');
+var helper = require('./helper');
 var querystring = require('querystring');
 var allowedDomain = 'http://my.activity.com'; 
 var serversalt = 'salty';
@@ -91,6 +92,8 @@ function handleRequest(request,response){
 					});					
 		}
 		if(request.url=="/auth/token"){
+			console.log("Cookie received " + request.headers.cookie);
+			console.log("tkn value: " + helper.getCookieValue(request.headers.cookie,'tkn'));
 			requestHandled=true;
 			var queryObject = querystring.parse(postData);
 			
