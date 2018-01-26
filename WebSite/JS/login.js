@@ -24,6 +24,21 @@ var loginModule = (function(){
 		        vars[hash[0]] = hash[1];
 		    }
 		    return vars;
+		},
+		getCookie:function(cname) {
+		    var name = cname + "=";
+		    var decodedCookie = document.cookie;
+		    var ca = decodedCookie.split(';');
+		    for(var i = 0; i <ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0) == ' ') {
+		            c = c.substring(1);
+		        }
+		        if (c.indexOf(name) == 0) {
+		            return c.substring(name.length, c.length);
+		        }
+		    }
+		    return "";
 		}	
 	}
 })();
@@ -31,5 +46,8 @@ var loginModule = (function(){
 $(document).ready(function(){	
 	var urlParms = loginModule.getUrlVars();
 	$('#hdnCSRF').val(urlParms['tkn']);
+	var backedEndError = loginModule.getCookie('error');
+	if(backedEndError!="")
+		alert(backedEndError);
 	}
 );

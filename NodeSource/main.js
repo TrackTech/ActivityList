@@ -93,15 +93,24 @@ function handleRequest(request,response){
 		}
 		if(request.url=="/auth/token"){
 			console.log("Cookie received " + request.headers.cookie);
-			console.log("tkn value: " + helper.getCookieValue(request.headers.cookie,'tkn'));
-			requestHandled=true;
+			//console.log("tkn value: " + helper.getCookieValue(request.headers.cookie,'tkn'));
 			var queryObject = querystring.parse(postData);
-			
-			if(queryObject.login=="" || queryObject.password==""){
-				response.writeHead(400); //bad request, do not repeat
+			requestHandled=true;						
+			if(!(queryObject && queryObject.login && queryObject.password)){
+				response.writeHead(400,{'Set-Cookie':'error=invalidRequest;Path=/login.html'}); //bad request, do not repeat
 				response.end();
 				return;
-			} 
+			}
+			if(!(queryObject.csrfToken && helper.getCookieValue(request.headers.cookie,'tkn'))){
+				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;Path=/login.html'});
+				response.end();
+				return;
+			}						
+			if(queryObject.csrfToken != helper.getCookieValue(request.headers.cookie,'tkn')){
+				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;Path=/login.html'});
+				response.end();
+				return;
+			}
 			var searchQuery = {};
 			searchQuery["username"]=queryObject.login;
 			var data = dal.findDocs(dburl,function(retVal){

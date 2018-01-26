@@ -26,6 +26,12 @@ html,body {
 	background-color: rgb(255,255,255);
 	padding: 10px;
 }
+.loginPanel #errorSpan{
+	display:block;
+	clear:both;
+	text-align: center;
+	padding: 10px;
+}
 .inputdiv{
 	width: 70%;	
 	float: left;

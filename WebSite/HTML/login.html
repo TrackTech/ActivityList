@@ -12,7 +12,9 @@
 			<div id="formPanel" class="loginPanel">		
 				<form id='frmActivity' method='post' action="/auth/token">	
 				<!-- Requires CSRF Token -->
-					<div class="inputdiv">					
+
+					<div class="inputdiv">						
+					<span id="errorSpan">Login Below</span>	
 					<input type=text id=txtLogin name="login"></input><label for="txtLogin">Login:</label>				
 					<input id="txtPass" type="Password" name="password"/><label for="txtPass">Password:</label>
 					<input type="hidden" id="hdnCSRF" name="csrfToken"/>
