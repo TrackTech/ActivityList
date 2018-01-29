@@ -13,6 +13,8 @@ function getCookie(cname) {
     }
     return "";
 }
+
+	
 exports.getCookieValue=function(cookies,cname){
 	var name = cname + "=";    
     var ca = cookies.split(';');
@@ -26,4 +28,11 @@ exports.getCookieValue=function(cookies,cname){
         }
     }
     return "";
+}
+
+exports.isEmptyObject=function(obj){
+
+
+	if(Object.keys(obj).length==0) return true;
+	return false;
 }

@@ -91,23 +91,21 @@ function handleRequest(request,response){
 						response.end();				
 					});					
 		}
-		if(request.url=="/auth/token"){
-			console.log("Cookie received " + request.headers.cookie);
-			//console.log("tkn value: " + helper.getCookieValue(request.headers.cookie,'tkn'));
+		if(request.url=="/auth/token"){			
 			var queryObject = querystring.parse(postData);
 			requestHandled=true;						
 			if(!(queryObject && queryObject.login && queryObject.password)){
-				response.writeHead(400,{'Set-Cookie':'error=invalidRequest;Path=/login.html'}); //bad request, do not repeat
+				response.writeHead(400,{'Set-Cookie':'error=invalidRequest;'}); //bad request, do not repeat
 				response.end();
 				return;
 			}
 			if(!(queryObject.csrfToken && helper.getCookieValue(request.headers.cookie,'tkn'))){
-				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;Path=/login.html'});
+				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;'});
 				response.end();
 				return;
 			}						
 			if(queryObject.csrfToken != helper.getCookieValue(request.headers.cookie,'tkn')){
-				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;Path=/login.html'});
+				response.writeHead(400,{'Set-Cookie':'error=invalidCSRF;'});
 				response.end();
 				return;
 			}
@@ -119,17 +117,21 @@ function handleRequest(request,response){
 							response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot													
 						}
 						else{		
-						/******************need a validation class		****************/												
-								var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);										
-								hashOutput = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);															
-								
-								if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ //not working
-									response.writeHead(303,{'Location':'../index.html'});									
-								}									
-								else
-								{
-									response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});								
-									response.write("failed");
+						/******************need a validation class		****************/	
+							if(helper.isEmptyObject(retVal.data)){
+									response.writeHead(400,{'Set-Cookie':'error=loginFailed;'});											
+							}
+							else{
+									var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);										
+									hashOutput = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);															
+									
+									if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ //not working
+										response.writeHead(303,{'Location':'../index.html'});									
+									}									
+									else
+									{
+										response.writeHead(400,{'Set-Cookie':'error=loginFailed;'});
+									}
 								}
 							}
 							response.end();

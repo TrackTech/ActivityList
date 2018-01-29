@@ -1,18 +1,6 @@
 "use strict";
 
-var loginModule = (function(){
-	/*var getUrlVars = function()
-	{
-	    var vars = [], hash;
-	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-	    for(var i = 0; i < hashes.length; i++)
-	    {
-	        hash = hashes[i].split('=');
-	        vars.push(hash[0]);
-	        vars[hash[0]] = hash[1];
-	    }
-	    return vars;
-	} */
+var loginModule = (function(){	
 	return {
 		getUrlVars:function(){
 			 var vars = [], hash;
@@ -39,7 +27,22 @@ var loginModule = (function(){
 		        }
 		    }
 		    return "";
-		}	
+		},
+		updateErrorMessage:function(ui,errorCode){
+			switch(errorCode) {				
+				case "loginFailed":
+					$('#' + ui).text('Login Failed due to bad username or password, try again');
+					break;
+				case "invalidRequest":
+					$('#' + ui).text('Incomplete information, please enter username/password');
+					break;
+				case "invalidCSRF":
+					$('#' + ui).text('Login page has expired, please try again');
+					break;
+				default: 
+					$('#' + ui).text('Login Below:');
+			} 
+		}
 	}
 })();
 
@@ -47,7 +50,5 @@ $(document).ready(function(){
 	var urlParms = loginModule.getUrlVars();
 	$('#hdnCSRF').val(urlParms['tkn']);
 	var backedEndError = loginModule.getCookie('error');
-	if(backedEndError!="")
-		alert(backedEndError);
-	}
-);
+	loginModule.updateErrorMessage('errorSpan',backedEndError);
+});
