@@ -8,7 +8,7 @@ var allowedDomain = 'http://my.activity.com';
 var serversalt = 'salty';
 
 function handleRequest(request,response){		
-	var dburl = 'mongodb://localhost:27017/Activity';
+	var dburl = 'mongodb://activityProject:activityprojectpassword@localhost:27017/Activity';
 	var postData=[];	
 
 	response.setHeader('Access-Control-Allow-Origin',allowedDomain); //as it is on a different port	
