@@ -39,6 +39,9 @@ var loginModule = (function(){
 				case "invalidCSRF":
 					$('#' + ui).text('Login page has expired, please try again');
 					break;
+				case "loginRequired":
+					$('#' + ui).text('Re Login Required, please try again');
+					break;
 				default: 
 					$('#' + ui).text('Login Below:');
 			} 

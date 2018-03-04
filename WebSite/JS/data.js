@@ -5,7 +5,14 @@ dataModule=(function(){
 				$.ajax({					
 					url:uri,
 					method:"Get",
-					success:successCallback		
+					success:successCallback,
+					error: function(xhr,ajaxOptions,throwError){
+						alert(xhr.status);
+						alert(throwError);
+						if(xhr.status==403){
+							window.location = "/";
+						}
+					}		
 					});	
 			},
 			Post:function(uri,data,successCallback){

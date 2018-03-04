@@ -17,6 +17,7 @@ function getCookie(cname) {
 	
 exports.getCookieValue=function(cookies,cname){
 	var name = cname + "=";    
+    if(!cookies) return "";
     var ca = cookies.split(';');
     for(var i = 0; i <ca.length; i++) {
         var c = ca[i];

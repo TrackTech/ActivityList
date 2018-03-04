@@ -3,12 +3,13 @@ var HttpDispatcher = require('httpdispatcher');
 var dal = require('./dal'); //.js not required here
 var cryp = require('./crypto');
 var helper = require('./helper');
+var jwt = require('./jwt');
 var querystring = require('querystring');
 var allowedDomain = 'http://my.activity.com'; 
 var serversalt = 'salty';
 
 function handleRequest(request,response){		
-	var dburl = 'mongodb://activityProject:XXXX@localhost:27017/Activity';
+	var dburl = 'mongodb://activityProject:activityprojectpassword@localhost:27017/Activity';
 	var postData=[];	
 
 	response.setHeader('Access-Control-Allow-Origin',allowedDomain); //as it is on a different port	
@@ -17,18 +18,35 @@ function handleRequest(request,response){
 	var getHandler=function(){
 		if(request.url=='/data/activitylist'){
 			requestHandled = true;
-			var retVal = dal.findDocs(dburl,function(retVal){
-			if(retVal.error){
-				response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot					
-				response.end();
+			//validate jwt
+			if(!helper.getCookieValue(request.headers.cookie,'jwt')){
+				response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
+				response.end();	
+				return;									
 			}
-			else{
-				console.log('consuming data');
-				response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});
-				response.write(JSON.stringify(retVal.data));			
-				response.end();
-			}},'T_ACTIVITY_LIST',{}
-			);		
+
+			jwt.ValidateToken(helper.getCookieValue(request.headers.cookie,'jwt'),function(err,verifiedJwt){
+				if(err){
+					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
+					response.end();										
+				}
+				else
+				{
+					var searchQuery = {};					
+					searchQuery["userid"] = verifiedJwt.body["sub"];
+					var retVal = dal.findDocs(dburl,function(retVal){
+					if(retVal.error){ //a user can have no records vs db throwns and error
+						response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot					
+						response.end();
+					}
+					else{				
+						response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});
+						response.write(JSON.stringify(retVal.data));			
+						response.end();
+					}},'T_ACTIVITY_LIST',searchQuery
+					);
+				}
+			});											
 		}
 		if(request.url.startsWith('/lookup')){
 			requestHandled=true;			
@@ -55,7 +73,8 @@ function handleRequest(request,response){
 		}		
 	}
 	var postHandler=function(){
-		if(request.url=='/data/activity'){		
+		if(request.url=='/data/activity'){
+		//validate jwt		
 			requestHandled=true;			
 			console.log('POST an activity');
 			postData = JSON.parse(postData);	
@@ -91,7 +110,8 @@ function handleRequest(request,response){
 						response.end();				
 					});					
 		}
-		if(request.url=="/auth/token"){			
+		if(request.url=="/auth/token"){	
+		//NO JWT validation		
 			var queryObject = querystring.parse(postData);
 			requestHandled=true;						
 			if(!(queryObject && queryObject.login && queryObject.password)){
@@ -121,12 +141,14 @@ function handleRequest(request,response){
 							if(helper.isEmptyObject(retVal.data)){
 									response.writeHead(400,{'Set-Cookie':'error=loginFailed;'});											
 							}
-							else{
+							else{									
+									//console.log(retVal.data[0]._id);
 									var hashOutput = cryp.generateHash(queryObject.password,retVal.data[0].passwordsalt);										
 									hashOutput = cryp.generateHash(hashOutput["passwordhash"],serversalt,1);															
 									
-									if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ //not working
-										response.writeHead(303,{'Location':'../index.html'});									
+									if(hashOutput["passwordhash"]==retVal.data[0].passwordhash){ 
+										var token = 'jwt=' + jwt.GetNewToken(retVal.data[0]._id)+';Path=/';
+										response.writeHead(303,{'Set-Cookie':token,'Location':'../index.html'});									
 									}									
 									else
 									{

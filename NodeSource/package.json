@@ -5,7 +5,8 @@
   "main": "main.js",
   "dependencies": {
     "httpdispatcher": "^2.0.1",
-    "mongodb": "^2.2.24"
+    "mongodb": "^2.2.24",
+    "njwt": "^0.4.0"
   },
   "devDependencies": {},
   "scripts": {
