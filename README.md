@@ -22,6 +22,8 @@
     * git pull origin Dev01012018 (current branch)
   * cd NodeSource
   * sudo cp *.* ../../NodeJsServer/
+  * npm install
+    * This will reach the package.json file and intall all dependencies for NodeJs
 
 # Deployment
 
