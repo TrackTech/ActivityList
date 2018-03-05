@@ -4,9 +4,11 @@ var dal = require('./dal'); //.js not required here
 var cryp = require('./crypto');
 var helper = require('./helper');
 var jwt = require('./jwt');
+var pageHandle = require('./pageHandler');
 var querystring = require('querystring');
 var allowedDomain = 'http://my.activity.com'; 
 var serversalt = 'salty';
+
 
 function handleRequest(request,response){		
 	var dburl = 'mongodb://activityProject:activityprojectpassword@localhost:27017/Activity';
@@ -18,7 +20,32 @@ function handleRequest(request,response){
 	var getHandler=function(){
 		if(request.url=='/data/activitylist'){
 			requestHandled = true;
+			var pageHan = pageHandle.handler(request,response,function(err,verifiedJwt){
+				if(err){
+					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
+					response.end();										
+				}
+				else
+				{
+					var searchQuery = {};					
+					searchQuery["userid"] = verifiedJwt.body["sub"];
+					var retVal = dal.findDocs(dburl,function(retVal){
+					if(retVal.error){ //a user can have no records vs db throwns and error
+						response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot					
+						response.end();
+					}
+					else{				
+						response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});
+						response.write(JSON.stringify(retVal.data));			
+						response.end();
+					}},'T_ACTIVITY_LIST',searchQuery
+					);
+				}
+			});
+			pageHan.handlePage();
 			//validate jwt
+
+			/* working code
 			if(!helper.getCookieValue(request.headers.cookie,'jwt')){
 				response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
 				response.end();	
@@ -46,7 +73,7 @@ function handleRequest(request,response){
 					}},'T_ACTIVITY_LIST',searchQuery
 					);
 				}
-			});											
+			});		*/									
 		}
 		if(request.url.startsWith('/lookup')){
 			requestHandled=true;			

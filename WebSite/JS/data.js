@@ -6,9 +6,7 @@ dataModule=(function(){
 					url:uri,
 					method:"Get",
 					success:successCallback,
-					error: function(xhr,ajaxOptions,throwError){
-						alert(xhr.status);
-						alert(throwError);
+					error: function(xhr,ajaxOptions,throwError){						
 						if(xhr.status==403){
 							window.location = "/";
 						}
