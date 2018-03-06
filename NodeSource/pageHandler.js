@@ -1,5 +1,7 @@
 var helper = require('./helper');
 var jwt = require('./jwt');
+var dal = require('./dal');
+
 var pageHandler = function(request,response,cback){
 		this.handlePage=function(){
 			console.log('in handlePage');						

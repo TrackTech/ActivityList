@@ -20,7 +20,7 @@ function handleRequest(request,response){
 	var getHandler=function(){
 		if(request.url=='/data/activitylist'){
 			requestHandled = true;
-			var pageHan = pageHandle.handler(request,response,function(err,verifiedJwt){
+			pageHandle.handler(request,response,function(err,verifiedJwt){
 				if(err){
 					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
 					response.end();										
@@ -41,57 +41,34 @@ function handleRequest(request,response){
 					}},'T_ACTIVITY_LIST',searchQuery
 					);
 				}
-			});
-			pageHan.handlePage();
-			//validate jwt
-
-			/* working code
-			if(!helper.getCookieValue(request.headers.cookie,'jwt')){
-				response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
-				response.end();	
-				return;									
-			}
-
-			jwt.ValidateToken(helper.getCookieValue(request.headers.cookie,'jwt'),function(err,verifiedJwt){
-				if(err){
-					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
-					response.end();										
-				}
-				else
-				{
-					var searchQuery = {};					
-					searchQuery["userid"] = verifiedJwt.body["sub"];
-					var retVal = dal.findDocs(dburl,function(retVal){
-					if(retVal.error){ //a user can have no records vs db throwns and error
-						response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot					
-						response.end();
-					}
-					else{				
-						response.writeHead(retVal.responseCode,{'Content-Type':'application/json'});
-						response.write(JSON.stringify(retVal.data));			
-						response.end();
-					}},'T_ACTIVITY_LIST',searchQuery
-					);
-				}
-			});		*/									
+			}).handlePage();			
 		}
 		if(request.url.startsWith('/lookup')){
 			requestHandled=true;			
 			var tok = request.url.split('/');
 			var lookupToken = tok[2];		
 			console.log('fetching lookup data');			
-			var searchQuery = {};
-			searchQuery[lookupToken]= {$exists:true};
-			var retVal = dal.findDocs(dburl,function(retVal){
-			if(retVal.error){
-				response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot													
-			}
-			else{						
-				response.writeHead(retVal.responseCode,{'Content-Type':'application/json','Cache-Control':'public,max-age=300'});			
-				response.write(JSON.stringify(retVal.data));									
+			pageHandle.handler(request,response,function(err,verifiedJwt){
+				if(err){
+					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
+					response.end();										
 				}
-				response.end();
-			},'T_LOOKUP',searchQuery);			
+				else
+				{
+					var searchQuery = {};
+					searchQuery[lookupToken]= {$exists:true};
+					var retVal = dal.findDocs(dburl,function(retVal){
+					if(retVal.error){
+						response.writeHead(retVal.responseCode);	//response.setHeader('Retry-After',5); there is not much support for this header , except with googlebot													
+					}
+					else{						
+						response.writeHead(retVal.responseCode,{'Content-Type':'application/json','Cache-Control':'public,max-age=300'});			
+						response.write(JSON.stringify(retVal.data));									
+						}
+						response.end();
+					},'T_LOOKUP',searchQuery);
+				}
+			}).handlePage();		
 		}
 		if(!requestHandled)
 		{
@@ -104,11 +81,23 @@ function handleRequest(request,response){
 		//validate jwt		
 			requestHandled=true;			
 			console.log('POST an activity');
-			postData = JSON.parse(postData);	
-			dal.insertDoc(dburl,'T_ACTIVITY_LIST',postData,function(retVal){
-				response.writeHead(retVal.responseCode);	//cannot simply include content type.					
-				response.end();				
-			});								
+
+			pageHandle.handler(request,response,function(err,verifiedJwt){
+				if(err){
+					response.writeHead(403,{'Set-Cookie':'error=loginRequired;Path=/login.html;max-age=5'});	
+					response.end();										
+				}
+				else
+				{
+					postData = JSON.parse(postData);	
+					postData.push(new KeyValPair("userid",verifiedJwt.body["sub"]));					
+					console.log(postData);
+					dal.insertDoc(dburl,'T_ACTIVITY_LIST',postData,function(retVal){
+						response.writeHead(retVal.responseCode);	//cannot simply include content type.					
+						response.end();				
+					});	
+				}
+			}).handlePage();												
 		}
 		if(request.url=='/auth/register'){ //only post
 			requestHandled=true;			
