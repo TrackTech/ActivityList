@@ -1,0 +1,35 @@
+<head>
+<meta charset="utf-8">
+<title>Off The Gym</title>
+<link href="login.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div id="mainContainer" class="container">	
+		<header>
+			<h3>----Off The Gym----</h3>
+		</header>
+		<main>
+			<div id="formPanel" class="loginPanel">		
+				<form id='frmActivity' method='post' action="/auth/token">	
+				<!-- Requires CSRF Token -->
+
+					<div class="inputdiv">						
+					<span id="errorSpan">Login Below</span>	
+					<input type=text id=txtLogin name="login"></input><label for="txtLogin">Login:</label>				
+					<input id="txtPass" type="Password" name="password"/><label for="txtPass">Password:</label>
+					<input type="hidden" id="hdnCSRF" name="csrfToken"/>
+					<input type="submit" name="btnSubmit" value="Enter">	
+					<a href="" class="registerlink">Register</a>				
+					</div>					
+				</form>
+			</div>
+		</main>
+		<footer>
+		web->Nginx->Node->Mongodb
+		</footer>
+	</div>
+	<script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>	
+	<script type="text/javascript" src="login.js"></script>
+</body>
+</html>
+
