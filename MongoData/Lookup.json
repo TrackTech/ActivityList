@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5a0a45960062b4fa80f73a38"},"activitytype":[{"key":0.0,"value":"Rock Climbing"},{"key":1.0,"value":"Hiking"},{"key":2.0,"value":"Running"}]}
+{"_id":{"$oid":"5a0a46690062b4fa80f73a39"},"activitystatus":[{"key":0.0,"value":"Pending"},{"key":1.0,"value":"Complete"},{"key":2.0,"value":"Abandoned"}]}

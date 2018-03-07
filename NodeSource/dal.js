@@ -10,7 +10,8 @@ var findAllDocuments = function(db,cback,collectionName,findQuery,limit){
 	findQuery = findQuery || {};
 	/*if(findQuery===undefined){
 		findQuery={};
-	} */	
+	} */
+	//console.log(findQuery);	
 	collection.find(findQuery).toArray(function(err,docs){	
 		db.close();	
 		var retVal = {};
