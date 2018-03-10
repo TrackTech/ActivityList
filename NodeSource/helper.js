@@ -32,8 +32,13 @@ exports.getCookieValue=function(cookies,cname){
 }
 
 exports.isEmptyObject=function(obj){
-
-
 	if(Object.keys(obj).length==0) return true;
 	return false;
+}
+
+exports.KeyValPair=function(k,v){
+    return {
+        name:k,
+        value:v
+    }
 }
