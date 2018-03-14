@@ -26,6 +26,12 @@
     * This will reach the package.json file and intall all dependencies for NodeJs
 
 # Deployment
-
+# Staring various processes
+  * sudo service nginx start
+    * sudo service nginx status
+  * sudo service start mongod
+    * sudo service status mongod
+  * pm2 start main.js
+    * pm2 list
   
   
